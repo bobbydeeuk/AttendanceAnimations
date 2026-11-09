@@ -232,3 +232,53 @@ test("import safeguards, explicit corrections, and JSON recovery", async ({
     page.getByText("History restored. Export an updated master to retain it."),
   ).toBeVisible();
 });
+
+test("standalone starts without module support, including an opaque document origin", async ({
+  page,
+}) => {
+  await page.context().setOffline(true);
+  await page.addInitScript(() => {
+    HTMLScriptElement.supports = (type: string) =>
+      type === "module" ? false : true;
+  });
+  await page.goto(url);
+  await expect(
+    page.getByRole("button", { name: "YEAR 7", exact: true }),
+  ).toBeVisible();
+  const html = readFileSync(resolve("dist/attendance-animations.html"), "utf8");
+  expect(html).not.toMatch(/<script\b[^>]*type=["']module["']/);
+  // A sandboxed attachment frame has an opaque origin. Startup must not need
+  // a module loader, external fetches, storage, or secure-context APIs.
+  await page.goto("about:blank");
+  await page.setContent(
+    '<iframe sandbox="allow-scripts" style="width:1440px;height:1000px"></iframe>',
+  );
+  await page.locator("iframe").evaluate((el, html) => {
+    (el as HTMLIFrameElement).srcdoc = html;
+  }, html);
+  const frame = page.frameLocator("iframe");
+  await expect(
+    frame.getByRole("button", { name: "YEAR 7", exact: true }),
+  ).toBeVisible();
+  await frame.getByRole("button", { name: "YEAR 7", exact: true }).click();
+  await expect(
+    frame.getByRole("heading", { name: "Year Group Showdown" }),
+  ).toBeVisible();
+});
+
+test("script-disabled previews show opening instructions instead of a blank page", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto(url);
+  await expect(
+    page.getByRole("heading", { name: "Attendance Animations", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      /Download the HTML file and open it directly in desktop Chrome or Edge/,
+    ),
+  ).toBeVisible();
+  await context.close();
+});

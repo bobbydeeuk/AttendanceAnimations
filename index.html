@@ -10,7 +10,54 @@
     <script id="attendance-data" type="application/json">
       null
     </script>
-    <div id="root"></div>
+    <div id="root">
+      <section
+        id="startup-message"
+        style="
+          max-width: 640px;
+          margin: 12vh auto;
+          padding: 36px;
+          font:
+            16px/1.7 Arial,
+            sans-serif;
+          color: #fff8e9;
+          background: #0d3558;
+          border: 1px solid #f6ce5566;
+          border-radius: 18px;
+        "
+      >
+        <p style="color: #f6ce55; font-size: 12px; letter-spacing: 2px">
+          HEDINGHAM SCHOOL &amp; SIXTH FORM
+        </p>
+        <h1 style="font-size: 32px; letter-spacing: -1px">
+          Attendance Animations
+        </h1>
+        <p id="startup-status">Opening the attendance show…</p>
+        <p>
+          Download the HTML file and open it directly in desktop Chrome or Edge.
+          Chat, Teams and file previews may display the file without running the
+          app.
+        </p>
+        <p>
+          If this message stays visible, close the preview and open the
+          downloaded file from your computer’s Downloads folder.
+        </p>
+        <noscript
+          ><p>
+            JavaScript is disabled in this viewer. Open the downloaded HTML in a
+            browser with JavaScript enabled.
+          </p></noscript
+        >
+      </section>
+    </div>
+    <script>
+      window.addEventListener("error", function () {
+        var status = document.getElementById("startup-status");
+        if (status)
+          status.textContent =
+            "The app could not start in this viewer. Please open the downloaded file directly in Chrome or Edge.";
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

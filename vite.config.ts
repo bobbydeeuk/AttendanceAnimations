@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import { readFileSync, existsSync } from "node:fs";
 import { demoStore, safeJSON } from "./src/data";
+import { standaloneScripts } from "./scripts/standalone";
 export default defineConfig(({ mode }) => ({
   build: {
     target: "es2022",
@@ -33,13 +34,17 @@ export default defineConfig(({ mode }) => ({
     {
       name: "rename",
       enforce: "post",
-      generateBundle(_, bundle) {
-        const asset = bundle["index.html"];
-        if (asset) {
-          asset.fileName = "attendance-animations.html";
-          bundle["attendance-animations.html"] = asset;
-          delete bundle["index.html"];
-        }
+      generateBundle: {
+        order: "post",
+        handler(_, bundle) {
+          const asset = bundle["index.html"];
+          if (asset && asset.type === "asset") {
+            asset.source = standaloneScripts(String(asset.source));
+            asset.fileName = "attendance-animations.html";
+            bundle["attendance-animations.html"] = asset;
+            delete bundle["index.html"];
+          }
+        },
       },
     },
   ],

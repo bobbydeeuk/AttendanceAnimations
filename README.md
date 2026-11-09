@@ -4,6 +4,8 @@ A portable, offline attendance game show for Hedingham School & Sixth Form. The 
 
 ## Open the application
 
+For desktop, download **[AttendanceAnimations-desktop.zip](dist/AttendanceAnimations-desktop.zip)**, extract it, and open `Administrator/attendance-animations.html` in Chrome or Edge. Open it from your Downloads/extracted folder, rather than inside the chat or Teams attachment preview. Previews and file viewers may disable JavaScript.
+
 Download **[dist/attendance-animations.html](dist/attendance-animations.html)** and open it in a modern desktop browser. It contains the complete administrator application, bundled fonts, artwork, Excel parser and aggregate history. No installation, server, sign-in or internet connection is needed. The repository ships clearly labelled fictional demo totals; your first accepted workbook replaces them.
 
 A separate **[dist/presentation/attendance-animations.html](dist/presentation/attendance-animations.html)** is the presentation-only build. Its JavaScript excludes the administration component and Excel importer. Both versions use the required filename; keep them in separate folders.
@@ -67,7 +69,7 @@ npm test
 npm run test:browser
 ```
 
-`npm run build` typechecks TypeScript and builds the presentation first, then embeds its complete template into the administrator HTML for offline publishing. Production has no runtime module imports or external asset requests. The application captures its pristine document before React mounts, then replaces only its JSON block on export; repeated exports do not nest application state or templates.
+`npm run build` typechecks TypeScript and builds the presentation first, then embeds its complete template into the administrator HTML for offline publishing. Production uses an inline classic script, explicitly deferred until the document is ready, with no runtime module loader or external asset requests. A static opening screen remains visible with instructions if a viewer disables JavaScript. Generate the optional ZIP download with `python3 scripts/package-desktop.py` after building (Python 3 required only for this packaging step). The application captures its pristine document before React mounts, then replaces only its JSON block on export; repeated exports do not nest application state or templates.
 
 Install the test browser with `npx playwright install chromium`. Browser tests use Playwright Chromium by default; set `CHROMIUM_PATH` to use a different local Chromium executable. They open the built HTML over `file://` with network disabled, perform three Excel import/accept/export/download/reopen cycles, check that pupil names never enter exported files, test presentation-only code exclusion, verify the three rounds and selected-year scope, and capture desktop/mobile screenshots. Run the build before browser tests.
 
