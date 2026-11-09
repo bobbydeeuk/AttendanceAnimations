@@ -742,8 +742,9 @@ export function Admin({
                 </button>
                 <h4>Timewell Spent artwork</h4>
                 <p>
-                  The reference-based vector host is replaceable with your
-                  official transparent artwork.
+                  The built-in Timewell has animated arms, gloves, eyes and
+                  bells. Uploading a still image replaces that animation with
+                  your artwork.
                 </p>
                 <label className="upload-zone">
                   Choose official mascot (PNG, WebP or JPEG)
@@ -775,6 +776,19 @@ export function Admin({
                     }}
                   />
                 </label>
+                {store.mascot && (
+                  <button
+                    className="secondary"
+                    onClick={() => {
+                      update({ ...store, mascot: undefined });
+                      setMessage(
+                        "Animated Timewell restored. Export to retain this choice.",
+                      );
+                    }}
+                  >
+                    Use animated Timewell
+                  </button>
+                )}
                 <h4>Start a new campaign</h4>
                 <p>
                   Download your current backup first. Starting fresh clears the

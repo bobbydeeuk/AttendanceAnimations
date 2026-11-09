@@ -282,3 +282,67 @@ test("script-disabled previews show opening instructions instead of a blank page
   ).toBeVisible();
   await context.close();
 });
+
+test("Timewell gives a real thumbs-up, waves in the show, celebrates, and respects reduced motion", async ({
+  page,
+}) => {
+  await page.context().setOffline(true);
+  await page.goto(url);
+  const thumb = page.locator(".host-scene .timewell-thumb-arm");
+  await expect(page.locator(".host-scene svg.timewell")).toHaveAttribute(
+    "data-gesture",
+    "thumbs-up",
+  );
+  const thumbTransforms = await thumb.evaluate((el) => {
+    const a = el.getAnimations()[0];
+    a.pause();
+    a.currentTime = 0;
+    const first = getComputedStyle(el).transform;
+    a.currentTime = 1400;
+    const second = getComputedStyle(el).transform;
+    return [first, second];
+  });
+  expect(thumbTransforms[0]).not.toBe(thumbTransforms[1]);
+  await page.screenshot({ path: "docs/home.png", fullPage: true });
+  await page.getByRole("button", { name: "YEAR 9", exact: true }).click();
+  await expect(page.locator(".mini-host svg.timewell")).toHaveAttribute(
+    "data-gesture",
+    "wave",
+  );
+  const waveTransforms = await page
+    .locator(".timewell-wave-arm")
+    .evaluate((el) => {
+      const a = el.getAnimations()[0];
+      a.pause();
+      a.currentTime = 0;
+      const first = getComputedStyle(el).transform;
+      a.currentTime = 700;
+      const second = getComputedStyle(el).transform;
+      return [first, second];
+    });
+  expect(waveTransforms[0]).not.toBe(waveTransforms[1]);
+  await page.screenshot({ path: "docs/timewell-wave.png", fullPage: true });
+  await page.getByRole("button", { name: "Reveal results" }).click();
+  await expect(page.locator(".mini-host svg.timewell")).toHaveAttribute(
+    "data-gesture",
+    "ready",
+  );
+  await expect(
+    page.getByRole("button", { name: "Revealed", exact: true }),
+  ).toBeVisible({ timeout: 10000 });
+  await expect(page.locator(".mini-host svg.timewell")).toHaveAttribute(
+    "data-gesture",
+    "celebrate",
+  );
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(
+    await page
+      .locator(".timewell")
+      .evaluate(
+        (el) =>
+          el
+            .getAnimations({ subtree: true })
+            .filter((a) => a.playState === "running").length,
+      ),
+  ).toBe(0);
+});

@@ -24,6 +24,7 @@ import "@fontsource/plus-jakarta-sans/700.css";
 import "@fontsource/plus-jakarta-sans/800.css";
 import "./style.css";
 import { Timewell } from "./Timewell";
+import { BrandFlourish } from "./BrandFlourish";
 import {
   YEARS,
   HOUSES,
@@ -238,9 +239,10 @@ function App() {
     }
   }
   return (
-    <div className="app">
+    <div className={"app " + (round < 0 ? "welcome-view" : "show-view")}>
       <div className="ambient a1" />
       <div className="ambient a2" />
+      <BrandFlourish />
       <header>
         <button className="brand" onClick={() => navigate(-1)}>
           <span className="brand-mark">
@@ -348,7 +350,7 @@ function App() {
               </strong>
               <span className="speech-star">✦</span>
             </div>
-            <Timewell asset={store.mascot} />
+            <Timewell asset={store.mascot} gesture="thumbs-up" />
             <div className="host-shadow" />
             <div className="host-caption">
               <span className="live-dot" /> YOUR HOST, TIMEWELL SPENT
@@ -393,7 +395,17 @@ function App() {
           </div>
           <div className="host-strip">
             <div className="mini-host">
-              <Timewell asset={store.mascot} />
+              <Timewell
+                asset={store.mascot}
+                compact
+                gesture={
+                  phase === "done"
+                    ? "celebrate"
+                    : phase === "running"
+                      ? "ready"
+                      : "wave"
+                }
+              />
             </div>
             <p>
               {phase === "done" && round === 2
