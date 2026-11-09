@@ -1,0 +1,736 @@
+# Codex Development Brief
+## Project: Attendance Animations — Non-Stop November
+
+### 1. Project overview
+
+Build a polished, self-contained, interactive attendance presentation application for Hedingham School and Sixth Form, called Attendance Animations.
+
+The application's first campaign is Non-Stop November, a school attendance initiative celebrating pupils who maintain 100% attendance throughout November.
+
+The application will be presented by form tutors in classrooms, on interactive whiteboards and potentially during assemblies.
+
+It should resemble a colourful, exciting television game show, using suspenseful numerical reveals inspired by the BBC programme Pointless, but with completely original visual design, graphics and sound effects.
+
+The school's existing attendance mascot, Timewell Spent, will act as the show's virtual host.
+
+The application must not depend on a database, web server, external authentication service, SharePoint Framework, Microsoft Graph or any SharePoint application.
+
+The primary deliverable must be a single standalone HTML file containing the application, embedded attendance data, styles, JavaScript, animations and assets.
+
+The GitHub repository should contain the editable development source and build tooling.
+
+---
+
+### 2. Technology and architecture
+
+Use a modern development stack that produces a single-file HTML application.
+
+Suggested technologies:
+- TypeScript for application logic.
+- React for the interface and presentation state.
+- Vite for development and production builds.
+- CSS animations, SVG and optionally GSAP for polished effects.
+- SheetJS or another reliable browser-compatible library for reading Excel files.
+- Local JSON for structured attendance history.
+
+The development project may have multiple source files, components and assets.
+
+The production build must generate:
+
+attendance-animations.html
+
+This file must:
+- Work when opened directly from a local computer using a modern browser.
+- Require no internet connection.
+- Contain all required CSS and JavaScript.
+- Contain all presentation graphics, fonts and audio resources locally or inline.
+- Contain the latest attendance totals and historical snapshots.
+- Work without a backend.
+- Never transmit student data externally.
+- Support both normal and fullscreen browser presentation.
+
+Bundle all dependencies into the exported HTML. Do not rely on external CDNs.
+
+Avoid browser features incompatible with the file:// protocol, including module imports that fail because of local-file restrictions, runtime network requests and external asset fetches.
+
+For Excel importing, use the browser File API to read the workbook from a user-selected file.
+
+---
+
+### 3. Visual identity and branding
+
+The visual appearance is extremely important.
+
+This should feel like an engaging educational game show, rather than a conventional attendance dashboard.
+
+Use the established Non-Stop November / Timewell Spent branding.
+
+Branding principles:
+- Bright, colourful and friendly.
+- Strong visual hierarchy and large typography.
+- Animated backgrounds with subtle moving shapes.
+- Rounded cards and appealing transitions.
+- Confetti and celebration effects.
+- Clear contrasts and accessibility.
+- Playful but professional enough for secondary school pupils.
+- Excellent presentation on 16:9 classroom displays.
+
+Use Plus Jakarta Sans as the primary typeface, bundled locally.
+
+Use the existing Non-Stop November poster artwork and colour scheme as the primary reference when available. Do not invent a different appearance for Timewell Spent; provide a replaceable mascot asset component if the artwork has not yet been supplied.
+
+Timewell should appear throughout the show with speech bubbles containing contextual announcements.
+
+Example phrases:
+- "Welcome to Non-Stop November!"
+- "Who's still going strong?"
+- "Let's see which year group is leading!"
+- "It's time for the House Showdown!"
+- "Now, let's find out how your form is doing!"
+- "Another day, another step towards perfect attendance!"
+- "Keep it going — every day counts!"
+
+The dialogue must come from a configurable pool, rather than being identical every time.
+
+Animations must remain fluid and engaging without becoming excessively long.
+
+---
+
+### 4. Opening screen
+
+The home screen should immediately display the Non-Stop November title, Timewell Spent and the following message:
+
+"Who's still going strong?"
+
+Below this, display seven large, colourful and clearly selectable year-group buttons:
+- Year 7
+- Year 8
+- Year 9
+- Year 10
+- Year 11
+- Year 12
+- Year 13/14
+
+Important: Year 13 and Year 14 must be treated as a single administrative year group throughout the application.
+
+Even if the Excel file lists Year 13 and Year 14 separately, combine them into the display group "Year 13/14".
+
+Selecting a year group begins the presentation.
+
+Do not show administration, upload, history or settings buttons prominently on the opening screen.
+
+A small, discreet settings icon should appear in the top-right corner.
+
+Also show the date of the latest published attendance snapshot in a subtle footer.
+
+---
+
+### 5. Presentation sequence
+
+There are exactly three main presentation rounds.
+
+The order must always be:
+1. Year Group Showdown
+2. House Showdown
+3. Form Group Showdown
+
+The first two rounds show identical school-wide figures regardless of which year group was selected.
+
+The third round changes according to the year group selected on the opening screen.
+
+For example, selecting Year 9 launches:
+
+Year Group Showdown → House Showdown → Year 9 Form Group Showdown
+
+The presentation should not automatically progress between rounds.
+
+Provide clearly visible Next, Previous, Replay and Reveal controls, alongside a return-to-home control.
+
+Avoid requiring the presenter to repeatedly click through individual numerical changes. A single Reveal action should animate the results for the current round.
+
+---
+
+### 6. Round 1 — Year Group Showdown
+
+This is the first animation for every year group.
+
+Timewell introduces the round with an animated speech bubble.
+
+Example:
+"Let's find out how many students are still going strong across the school!"
+
+Display all seven administrative year groups:
+7, 8, 9, 10, 11, 12 and 13/14.
+
+Each year group has a large number display indicating how many pupils currently retain 100% attendance.
+
+Reveal animation:
+1. Before the animation starts, the final numbers should be hidden.
+2. When the presenter selects Reveal, all seven numerical displays activate.
+3. The numbers rapidly fluctuate up and down.
+4. Each display slows, with small delays between groups.
+5. The numbers settle on the accurate figures from the latest upload.
+6. Bars or visual columns animate to represent the revealed totals.
+7. The year groups are ranked by the number of pupils remaining on 100% attendance.
+8. The leading year group receives a suitable celebration animation.
+
+Make the counter effect reminiscent of the suspense of Pointless, without copying its distinctive artwork or branding.
+
+After the figures settle, display:
+- Current total remaining for each year.
+- Reduction since the previous upload.
+- Total reduction since the first upload.
+
+For example:
+Year 8 — 142 still going!
+5 fewer than last time
+18 fewer since the start
+
+Negative comparisons should be phrased positively and sensitively. Avoid describing pupils who have lost their perfect-attendance status as failures.
+
+Whole-school total:
+Also display a prominent whole-school figure within this round.
+Example: 843 STUDENTS STILL GOING STRONG!
+This total should animate as part of the same reveal.
+Do not create a separate round for the whole-school figure.
+
+Where counts are tied, display tied rankings correctly.
+
+The selected year group may be subtly highlighted, but it must not affect the overall rankings.
+
+---
+
+### 7. Round 2 — House Showdown
+
+Timewell introduces the house competition:
+"Now for the House Showdown! Which house has the most students still on 100% attendance?"
+
+Display the school's four houses:
+- Hawkwood — Red — Hawk
+- Symonds — Light blue — Shark
+- Moynes — Yellow — Minotaur
+- Thomason — Purple — Tiger
+
+Each house should have a strongly coloured panel matching its existing house identity.
+
+Use house-specific visual treatments, with mascots or placeholders where the official artwork is not yet available.
+
+The reveal operates similarly to the year group showdown:
+1. Four counters begin moving.
+2. The numbers fluctuate with suspenseful acceleration and deceleration.
+3. Each counter settles on the current total.
+4. House bars animate to show their relative sizes.
+5. The houses are ranked by current number of pupils retaining 100% attendance.
+6. The leading house receives a celebration animation.
+
+Each house displays:
+- Current 100% attendance count.
+- Difference from the previous upload.
+- Difference from the first upload.
+
+The house comparison includes all pupils across Years 7–14, combining Year 13 and Year 14 where appropriate.
+
+The house competition must always show the same figures regardless of the year selected at the start.
+
+---
+
+### 8. Round 3 — Form Group Showdown
+
+This round is specific to the year group selected on the opening screen.
+
+Timewell announces the selected year.
+
+For example:
+"Year 9, it's your turn! Let's find out which form is leading!"
+
+Display every form group belonging to the selected year.
+
+Form groups must be discovered dynamically from the data, not hardcoded.
+
+A suitable presentation might use a series of vertically arranged bars or large cards, depending on how many forms exist.
+
+The reveal animation should follow the same visual language as the other rounds:
+- Rapid numerical fluctuations.
+- Suspenseful deceleration.
+- Numbers settling on their final values.
+- Dynamic ranking and movement.
+- Celebration for the leading form or tied forms.
+
+Each form should display:
+- Its current number of students on 100% attendance.
+- Reduction since the previous upload.
+- Reduction since the baseline.
+- Its position within the year group.
+
+For Year 13/14, include forms containing students in either Year 13 or Year 14.
+
+If the same form name appears in both years, aggregate it into a single form unless configured otherwise.
+
+Do not display individual pupil names anywhere in the presentation.
+
+At the end, Timewell should deliver an encouraging conclusion.
+
+Example:
+"Fantastic effort, Year 9! Keep showing up, keep going strong, and let's see how many of you can make it to the end of November!"
+
+Provide a button returning the tutor to the home screen.
+
+---
+
+### 9. Presentation controls and animation behaviour
+
+The application is designed to be controlled by teachers.
+
+Controls must include:
+- Start presentation by selecting a year group.
+- Reveal current round.
+- Replay current round.
+- Move to next round.
+- Return to previous round.
+- Return to the opening screen.
+- Enter and exit fullscreen mode.
+- Mute/unmute sound effects.
+
+A round must not automatically move to the next.
+
+Once a round has been revealed, its final numbers must remain visible until the presenter navigates elsewhere or replays it.
+
+Pressing Replay should reproduce the suspense animation without modifying any data.
+
+Support keyboard shortcuts where practical:
+- Right arrow: Next round.
+- Left arrow: Previous round.
+- Space or Enter: Reveal.
+- R: Replay.
+- F: Toggle fullscreen.
+- Escape: Exit fullscreen where supported.
+
+Prevent shortcuts from interfering with text-entry fields.
+
+Use a proper animation state machine to avoid overlapping or duplicated reveal sequences.
+
+Support reduced-motion accessibility preferences.
+
+Provide optional, subtle, original game-show sound effects, with a clearly visible mute control. Do not use copyrighted television programme audio.
+
+---
+
+### 10. Excel import system
+
+The application must support importing .xlsx and .xls files through a browser file picker.
+
+Each imported spreadsheet contains ONLY students who currently have 100% attendance in Non-Stop November.
+
+Expected data fields:
+- Student Name
+- Year Group
+- Form
+- House
+
+Column names may vary, so implement intelligent column detection and a manual mapping interface.
+
+Example fictional data:
+Name | Year Group | Form | House
+Example Student A | 7 | 7HA | Hawkwood
+Example Student B | 8 | 8SY | Symonds
+Example Student C | 13 | 13MO | Moynes
+Example Student D | 14 | 14TH | Thomason
+
+Allow the administrator to select the worksheet if the workbook contains multiple sheets.
+
+Normalise the year-group field to support values such as 7, "Year 7", "Y7" and equivalent representations.
+
+Map 13 and 14 to the shared administrative group 13/14.
+
+Recognise the four official house names in a case-insensitive manner.
+
+Trim unnecessary spaces and detect empty, incomplete or invalid records.
+
+Never silently ignore invalid student records.
+
+Show a validation summary before accepting an import.
+
+---
+
+### 11. Counting rules and snapshot processing
+
+A snapshot represents the pupils who still have 100% attendance at a particular upload.
+
+Each accepted upload creates an immutable historical snapshot.
+
+The first accepted upload becomes the official campaign baseline.
+
+For each snapshot, calculate:
+- Total pupils still on 100% attendance.
+- Counts by administrative year group.
+- Counts by house.
+- Counts by form group within each administrative year group.
+
+All counts must derive from the same validated student dataset.
+
+A student should count once in the whole-school total, once in their year group, once in their house, and once in their form.
+
+The current count is the number of valid, distinct students in the latest snapshot.
+
+Comparison calculations:
+PreviousReduction = PreviousSnapshotCount - CurrentSnapshotCount
+BaselineReduction = BaselineSnapshotCount - CurrentSnapshotCount
+
+The first snapshot has no previous comparison; display "Starting total" rather than inventing a reduction.
+
+If two consecutive snapshots contain the same count, display "No change since last time".
+
+The competition assumes students leave the 100% group as November progresses and never re-enter.
+
+Consequently, counts should never increase.
+
+If any count increases, flag the import as inconsistent rather than silently adjusting the figures.
+
+Student identity and reconciliation:
+Use a stable student identifier if one is available in future Excel files.
+
+For the initial version, names are provided, but names alone are not guaranteed to be unique.
+
+Identify exact duplicate rows and suspicious repeated names, present them for administrator review, and do not silently combine two different students who happen to have the same name.
+
+If row-level matching is sufficiently reliable, warn when previously absent students reappear, or when pupils switch year, house or form.
+
+A student moving between group classifications may cause one group's number to increase even if the school-wide total decreases. Such changes must be highlighted for manual resolution.
+
+Do not automatically clip increased values to their previous counts, as this would misrepresent the underlying data.
+
+---
+
+### 12. Import preview and safeguards
+
+Before accepting a new upload, show a clear preview.
+
+Include:
+- Import date and time.
+- Number of valid records.
+- Number of rejected or questionable records.
+- Current whole-school total.
+- Previous whole-school total.
+- Difference since previous upload.
+- Year group comparisons.
+- House comparisons.
+- Form group comparisons.
+- Any unexpected increases.
+- Duplicate or missing records.
+
+Allow the administrator to cancel the import without changing anything.
+
+Do not commit data until validation has succeeded and the administrator has confirmed the import.
+
+If the new workbook is identical to the latest accepted workbook, warn the administrator and prevent an accidental duplicate snapshot.
+
+Allow a deliberate, clearly labelled correction workflow for a mistaken previous upload, preserving an audit trail.
+
+Do not let a failed import overwrite the existing snapshot history.
+
+---
+
+### 13. Administration area
+
+The application must have a discreet settings icon in the top-right corner of the home screen.
+
+Selecting the icon opens an administration password prompt.
+
+The requested password is supplied separately by the project owner and must not be committed as plaintext to the GitHub repository.
+
+Security limitation: Since this is a standalone HTML application without a server, the password can only provide a user-interface restriction, not genuine protection against someone inspecting or modifying the file.
+
+Implement a password gate as an accidental-access deterrent, with a stored salted verification hash rather than a visible plaintext password. Make the limitation clear in the documentation.
+
+For stronger operational protection, support a publisher workflow in which only the administrator retains an editable master file, while the published presentation file excludes importing and editing functionality. Keep the optional settings icon available in the administrator version.
+
+The administration dashboard should contain:
+1. Import New Attendance Data
+2. Current Attendance Summary
+3. Upload History
+4. Historical Progress
+5. Export Updated HTML
+6. Import/Export History Backup
+7. Settings and Campaign Management
+
+Administration must never interrupt or alter an existing presentation until data has been successfully committed.
+
+---
+
+### 14. Historical upload storage
+
+Retain every accepted upload from the start of the campaign.
+
+A historical snapshot must contain:
+- Unique snapshot identifier.
+- Import timestamp.
+- Campaign identifier.
+- Data schema version.
+- Whole-school count.
+- Counts by year group.
+- Counts by house.
+- Counts by form group.
+- Comparison against previous snapshot.
+- Comparison against baseline.
+- Non-identifying file fingerprint for duplicate detection.
+
+Pupil names must not be stored in the exported presentation file.
+
+Store aggregated counts and historical snapshots inside a clearly identifiable JSON data block embedded in the HTML.
+
+Use robust serialisation so that exported data cannot accidentally break the HTML document or execute scripts.
+
+The historical data should be independent of browser local storage. Closing the browser or moving the HTML file to another device must not delete the history.
+
+Do not store personal pupil records in localStorage, sessionStorage or IndexedDB.
+
+---
+
+### 15. Historical progress dashboard
+
+The history dashboard must only be accessible through the administration workflow.
+
+Include interactive charts showing the reduction in pupils retaining 100% attendance over time.
+
+Support:
+- Whole-school trends.
+- Individual year group trends.
+- House trends.
+- Form group trends.
+
+Use line graphs with clearly labelled snapshot dates.
+
+Allow comparison of all year groups or all houses on a single graph.
+
+Show the baseline, latest figure, overall reduction and number of snapshots recorded.
+
+Include a table of uploads, displaying the import date, whole-school count and change since the preceding upload.
+
+Allow the administrator to inspect older snapshots.
+
+Provide a way to download a JSON backup of the complete aggregated snapshot history.
+
+---
+
+### 16. Self-contained HTML export
+
+This is one of the most important application features.
+
+The administrator must be able to:
+1. Open the current application locally.
+2. Enter the administration area.
+3. Import an updated Excel workbook.
+4. Validate and accept the new snapshot.
+5. Select "Export Updated HTML".
+6. Download a new, complete HTML file.
+7. Replace the previous HTML file stored in Microsoft Teams.
+
+The exported file must contain:
+- The complete application.
+- All required scripts and styling.
+- Timewell Spent artwork.
+- All local visual assets.
+- Current aggregated attendance data.
+- All previous aggregated snapshots.
+- The active campaign settings.
+- No pupil names or student-level records.
+
+The exported filename must remain:
+attendance-animations.html
+
+Do not change the filename based on dates or version numbers.
+
+The new HTML file must load with the updated data immediately.
+
+Do not rely on the previous version remaining in the browser cache or on local storage.
+
+Robustness requirements:
+The application must support repeated import/export cycles without losing historical data.
+
+Example:
+- Import snapshot 1.
+- Export HTML.
+- Close the application.
+- Open the exported HTML.
+- Import snapshot 2.
+- Export again.
+- Close and reopen.
+- Import snapshot 3.
+- Export again.
+
+All three snapshots must remain present.
+
+Build automated tests that explicitly verify this workflow.
+
+Add an export verification step to confirm the downloaded document contains the expected snapshot count and latest totals.
+
+If possible, include a downloadable JSON backup alongside the HTML export, so that historical data can be recovered if an HTML file is accidentally replaced with an older version.
+
+---
+
+### 17. Campaign settings
+
+Create a configurable campaign settings object.
+
+For the first release:
+- Campaign name: Non-Stop November.
+- Campaign year: 2026.
+- Year groups: 7, 8, 9, 10, 11, 12, 13/14.
+- House names: Hawkwood, Symonds, Moynes, Thomason.
+- Ranking: highest current absolute attendance count.
+- Baseline: first accepted upload.
+- Animation mode: manual.
+- Mascot: Timewell Spent.
+
+Settings should be retained when the HTML is exported.
+
+Avoid hardcoding campaign-specific strings throughout the UI. Put them in a configuration module so that the animation engine can potentially be reused for future attendance initiatives.
+
+---
+
+### 18. Responsive presentation design
+
+Optimise primarily for:
+- 1920 × 1080 classroom displays.
+- Interactive whiteboards.
+- Projectors.
+- Standard school desktop and laptop computers.
+
+The interface should also adapt gracefully to tablets and smaller displays.
+
+Use large, readable text.
+
+Avoid making key numbers too small when many form groups are displayed.
+
+Support fullscreen presentation.
+
+Keep presentation controls accessible without obstructing animations.
+
+Add decorative motion and visual polish, but avoid excessive particle effects that reduce performance on older school computers.
+
+Target smooth animation at approximately 60 frames per second on typical hardware, with graceful degradation.
+
+---
+
+### 19. Testing requirements
+
+Develop automated tests for the data-processing engine and export process.
+
+Required cases include:
+- First upload correctly establishes the baseline.
+- Subsequent uploads calculate reductions correctly.
+- Identical consecutive totals show no change.
+- An unexpected increase is detected.
+- Duplicate records are identified.
+- Missing columns are rejected or mapped manually.
+- Invalid house names are flagged.
+- Year 13 and Year 14 are correctly combined.
+- Year 13/14 forms are grouped correctly.
+- A form or year with zero remaining pupils is not incorrectly omitted.
+- Historical form groups remain available for comparisons when they reach zero.
+- Repeated import/export cycles preserve every snapshot.
+- An identical workbook is detected.
+- A corrupt workbook does not overwrite existing data.
+- Pupil names are not present anywhere in the exported HTML.
+- All three presentation rounds use the correct figures.
+- Selecting a different year group changes only the form-group round.
+- The complete exported HTML runs without an internet connection.
+
+Add a small development-only mock-data generator for testing the animations.
+
+Mock pupil names must be fictional.
+
+Do not include real pupil information in the repository or test fixtures.
+
+---
+
+### 20. Suggested repository structure
+
+attendance-animations/
+├── src/
+│   ├── app/
+│   │   ├── App.tsx
+│   │   ├── navigation.ts
+│   │   └── campaignConfig.ts
+│   ├── components/
+│   │   ├── TimewellHost.tsx
+│   │   ├── AnimatedCounter.tsx
+│   │   ├── RevealBar.tsx
+│   │   ├── Leaderboard.tsx
+│   │   └── PresentationControls.tsx
+│   ├── screens/
+│   │   ├── HomeScreen.tsx
+│   │   ├── YearShowdown.tsx
+│   │   ├── HouseShowdown.tsx
+│   │   ├── FormShowdown.tsx
+│   │   └── AdminDashboard.tsx
+│   ├── data/
+│   │   ├── excelImporter.ts
+│   │   ├── validation.ts
+│   │   ├── snapshots.ts
+│   │   ├── comparisons.ts
+│   │   ├── embeddedData.ts
+│   │   └── htmlExporter.ts
+│   ├── animation/
+│   │   ├── revealEngine.ts
+│   │   └── soundEffects.ts
+│   ├── styles/
+│   └── assets/
+├── scripts/
+│   └── build-single-html.ts
+├── tests/
+├── dist/
+│   └── attendance-animations.html
+├── package.json
+├── vite.config.ts
+└── README.md
+
+The structure may be improved if a better architecture is appropriate, provided the final deliverable remains a standalone HTML file.
+
+---
+
+### 21. Quality and completion criteria
+
+The application should feel like a finished product, not a prototype or a generic React dashboard.
+
+Prioritise:
+- Visually impressive numerical reveals.
+- Strong use of the school branding.
+- Smooth animations.
+- An engaging Timewell Spent host.
+- Clear and simple teacher navigation.
+- Accurate attendance calculations.
+- Robust validation.
+- Reliable historical data retention.
+- Completely portable HTML output.
+
+The application must not require any external service after the HTML file has been generated.
+
+Document the local development and build instructions.
+
+The README must explain the exact administrator workflow for importing new data and replacing the published file in Teams.
+
+Include a warning that Teams/SharePoint may download the HTML rather than execute it in place, and document how staff can open the downloaded file in a browser.
+
+### 22. Development priorities
+
+Implement in the following order:
+
+Phase 1 — Functional foundation
+Build the opening screen, campaign configuration, Excel importer, validation, snapshot model, historical storage and single-file export.
+
+Phase 2 — Presentation system
+Implement the three rounds, manual navigation, animated counters, rankings and accurate comparison displays.
+
+Phase 3 — Visual polish
+Implement Timewell Spent, branded graphics, lively transitions, suspenseful reveals, sound effects and celebration animations.
+
+Phase 4 — Administration
+Complete the administration interface, historical charts, password deterrent, export process and backup facilities.
+
+Phase 5 — Testing and refinement
+Test the full offline import/export/reopen process and check classroom presentation quality.
+
+Do not consider the project complete until the standalone exported HTML has been tested independently of the development environment.
+
+Begin implementing the project now, using sensible defaults where the specification leaves visual or technical choices open. Do not stop after producing a plan. Build the working application.
