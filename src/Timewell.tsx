@@ -181,12 +181,12 @@ export function Timewell({
               />
               <g className="timewell-thumb-hand">
                 <path
-                  d="M377 237Q363 231 366 215Q365 204 378 195L388 181 387 160Q386 145 397 144Q410 144 410 159L408 183 425 184Q441 184 440 197L436 222Q434 240 416 243L391 243Z"
+                  d="M377 237Q360 232 364 216Q361 204 376 195Q386 185 388 178Q390 169 386 160Q383 146 395 143Q408 140 412 155Q416 169 409 181Q421 177 432 184Q444 187 440 200Q444 211 436 218Q438 231 426 236Q423 247 408 245Q389 248 377 237Z"
                   fill={paint("glove")}
                   strokeWidth="4.5"
                 />
                 <path
-                  d="m410 196 25 4m-27 8 27 4m-28 8 24 3m-49-22q13 1 15 15l-3 19"
+                  d="M410 196q14-5 25 4m-27 8q13-4 27 4m-28 8q13-3 24 3m-49-22q13 1 15 15q2 10-3 19"
                   fill="none"
                   strokeWidth="3.3"
                 />
@@ -217,7 +217,7 @@ export function Timewell({
         </g>
         <g className="timewell-legs">
           <path
-            d="m170 352-32 76 31 8 35-76m48-8 31 76-31 8-35-76"
+            d="M170 352Q172 390 138 428Q145 442 169 436Q200 398 204 360ZM252 352Q245 392 283 428Q278 443 252 436Q221 397 217 360Z"
             fill={paint("blue")}
           />
           <path
@@ -226,7 +226,7 @@ export function Timewell({
             strokeWidth="4"
           />
           <path
-            d="M136 433q-48-18-64 17l-1 20q32 25 101 4l8-25-17-14Z"
+            d="M136 433C112 416 76 431 71 452Q63 469 78 476Q119 494 170 475Q186 469 179 450Q173 433 157 432Z"
             fill={paint("blue")}
           />
           <path
@@ -235,7 +235,7 @@ export function Timewell({
             strokeWidth="4"
           />
           <path
-            d="M282 433q48-18 64 17l1 20q-32 25-101 4l-8-25 17-14Z"
+            d="M282 433C306 416 342 431 347 452Q355 469 340 476Q299 494 248 475Q232 469 239 450Q245 433 261 432Z"
             fill={paint("blue")}
           />
           <path
@@ -319,7 +319,7 @@ export function Timewell({
         <g
           fill="#071c32"
           stroke="none"
-          fontFamily="Arial, sans-serif"
+          fontFamily="Plus Jakarta Sans, sans-serif"
           fontWeight="900"
           fontSize="36"
           textAnchor="middle"

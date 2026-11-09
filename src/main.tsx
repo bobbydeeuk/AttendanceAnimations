@@ -14,7 +14,6 @@ import {
   X,
   ShieldCheck,
   Trophy,
-  Clock3,
 } from "lucide-react";
 import { Admin } from "./Admin";
 const PRESENTATION = import.meta.env.MODE === "presentation";
@@ -23,6 +22,7 @@ import "@fontsource/plus-jakarta-sans/600.css";
 import "@fontsource/plus-jakarta-sans/700.css";
 import "@fontsource/plus-jakarta-sans/800.css";
 import "./style.css";
+import { SchoolLogo } from "./SchoolLogo";
 import { Timewell } from "./Timewell";
 import { BrandFlourish } from "./BrandFlourish";
 import {
@@ -245,17 +245,9 @@ function App() {
       <BrandFlourish />
       <header>
         <button className="brand" onClick={() => navigate(-1)}>
-          <span className="brand-mark">
-            <Clock3 size={24} />
-          </span>
-          <span>
-            HEDINGHAM<small>SCHOOL & SIXTH FORM</small>
-          </span>
+          <SchoolLogo />
         </button>
         <div className="header-right">
-          <span className="campaign-tag">
-            ATTENDANCE ANIMATIONS <i /> {store.campaign.year}
-          </span>
           <button
             className="icon"
             title={muted ? "Unmute sound" : "Mute sound"}
@@ -287,9 +279,6 @@ function App() {
       {round < 0 ? (
         <main className="home">
           <div className="home-copy">
-            <div className="eyebrow">
-              <span /> EVERY DAY. EVERY OPPORTUNITY.
-            </div>
             <h1>
               {store.campaign.name.split(" ").slice(0, -1).join(" ") ||
                 store.campaign.name}
@@ -304,10 +293,10 @@ function App() {
               </svg>
             </h1>
             <p className="hero-sub">
-              Small steps. Strong habits. <b>Brighter futures.</b>
+              Remember, every moment spent in school is time well spent
             </p>
             <div className="choose-label">
-              LET’S HEAR IT FOR YOUR YEAR <ArrowRight size={16} />
+              Select your year to see your results!
             </div>
             <div className="year-grid">
               {YEARS.map((y, i) => (
@@ -326,9 +315,6 @@ function App() {
                 </button>
               ))}
             </div>
-            <p className="helper">
-              <Play size={13} /> Choose your year group to start the show
-            </p>
             {!counts && (
               <p>
                 Open administration to import the campaign’s first workbook.
@@ -384,11 +370,15 @@ function App() {
             <div className="school-total">
               <span>WHOLE SCHOOL STILL GOING</span>
               <b>
-                {phase === "hidden"
-                  ? "—"
-                  : phase === "done"
-                    ? counts?.total
-                    : Math.round((counts?.total || 0) * tick).toLocaleString()}
+                {round > 0
+                  ? counts?.total
+                  : phase === "hidden"
+                    ? "—"
+                    : phase === "done"
+                      ? counts?.total
+                      : Math.round(
+                          (counts?.total || 0) * tick,
+                        ).toLocaleString()}
               </b>
               <small>students · 100% attendance</small>
             </div>
@@ -433,11 +423,17 @@ function App() {
               const prev = latest?.previous?.[group][key],
                 base = latest?.baseline[group][key] || 0;
               const cmp = comparison(r.value, prev, base);
-              const settle = tick > 0.55 + i * 0.045;
+              const settle =
+                tick >=
+                0.58 + (i / Math.max(1, displayRanking.length - 1)) * 0.3;
               const val =
                 phase === "done" || (phase === "running" && settle)
                   ? r.value
-                  : Math.floor((Math.sin(tick * 105 + i * 7) + 1) * max * 0.65);
+                  : Math.round(
+                      (0.5 +
+                        Math.sin(tick * (42 - 18 * tick) + i * 2.1) * 0.5) *
+                        max,
+                    );
               const color =
                 round === 1
                   ? houseColors[HOUSES.indexOf(key)]
@@ -504,7 +500,7 @@ function App() {
                           phase === "done"
                             ? `${(r.value / max) * 100}%`
                             : phase === "running"
-                              ? `${(val / (max * 1.3)) * 100}%`
+                              ? `${(val / max) * 100}%`
                               : "0%",
                       }}
                     />
@@ -597,28 +593,6 @@ function App() {
           )}
         </main>
       )}
-      <footer>
-        <span>
-          <span className="live-dot" />{" "}
-          {store.demo
-            ? "DEMO DATA · FICTIONAL TOTALS"
-            : latest
-              ? "LATEST PUBLISHED SNAPSHOT"
-              : "AWAITING FIRST SNAPSHOT"}{" "}
-          {latest && (
-            <b>
-              {new Date(latest.timestamp).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </b>
-          )}
-        </span>
-        <span>
-          Belong. Achieve. Succeed. <i /> <em>Time Well Spent.</em>
-        </span>
-      </footer>
       {!PRESENTATION && gate && (
         <div className="overlay">
           <form className="modal gate" onSubmit={unlock}>

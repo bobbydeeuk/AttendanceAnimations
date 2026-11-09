@@ -451,7 +451,7 @@ footer > span:last-child {
   gap: 17px;
 }
 footer em {
-  font-family: Georgia, serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   color: var(--gold);
   font-size: 17px;
 }
@@ -1778,4 +1778,62 @@ footer {
     height: 80px;
     width: 96px;
   }
+}
+.school-logo {
+  width: 58px;
+  height: 79px;
+  display: block;
+  filter: drop-shadow(0 2px 3px #0003);
+}
+header .brand {
+  padding: 4px 0;
+}
+.home {
+  min-height: calc(100vh - 108px);
+}
+.show {
+  min-height: calc(100vh - 108px);
+}
+.home h1 {
+  font-size: clamp(76px, 7.6vw, 122px);
+  letter-spacing: -5px;
+}
+.hero-sub {
+  font-size: 18px;
+  line-height: 1.7;
+  max-width: 510px;
+  color: #fff3d1;
+  margin: 24px 0 32px;
+}
+.choose-label {
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-bottom: 18px;
+}
+@media (min-width: 1600px) {
+  .home,
+  .show {
+    min-height: calc(100vh - 90px);
+  }
+}
+@media (min-width: 1051px) and (max-height: 850px) {
+  .school-logo {
+    height: 61px;
+    width: 45px;
+  }
+  .home,
+  .show {
+    min-height: calc(100vh - 72px);
+  }
+  .home h1 {
+    font-size: 86px;
+  }
+  .hero-sub {
+    font-size: 16px;
+    margin: 18px 0 24px;
+  }
+}
+.leaderboard[aria-busy="true"] .bar-track > div {
+  transition: none;
 }

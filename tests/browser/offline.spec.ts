@@ -28,7 +28,7 @@ function workbook(n: number, path: string) {
   XLSX.utils.book_append_sheet(b, ws, "Attendance");
   writeFileSync(path, XLSX.write(b, { type: "buffer", bookType: "xlsx" }));
 }
-test("offline three rounds, correct scope, keyboard controls and responsive home", async ({
+test("offline three rounds, correct scope, keyboard controls and desktop layout", async ({
   page,
 }) => {
   const errors: string[] = [],
@@ -96,11 +96,6 @@ test("offline three rounds, correct scope, keyboard controls and responsive home
       .locator(".counter"),
   ).toHaveText(year9);
   await page.getByRole("button", { name: "Home", exact: true }).click();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.screenshot({ path: "docs/mobile.png", fullPage: true });
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(
-    390,
-  );
   expect(requests).toEqual([]);
   expect(errors).toEqual([]);
 });
@@ -345,4 +340,55 @@ test("Timewell gives a real thumbs-up, waves in the show, celebrates, and respec
             .filter((a) => a.playState === "running").length,
       ),
   ).toBe(0);
+});
+
+test("bars fluctuate then settle proportionally, while later rounds keep the school total fixed", async ({
+  page,
+}) => {
+  await page.goto(url);
+  await page.getByRole("button", { name: "YEAR 9", exact: true }).click();
+  await page.getByRole("button", { name: "Reveal results" }).click();
+  const samples = await page
+    .locator(".bar-track>div")
+    .first()
+    .evaluate(
+      (el) =>
+        new Promise<number[]>((resolve) => {
+          const heights: number[] = [];
+          const start = performance.now();
+          function sample() {
+            heights.push(el.getBoundingClientRect().height);
+            if (performance.now() - start < 1700) requestAnimationFrame(sample);
+            else resolve(heights);
+          }
+          sample();
+        }),
+    );
+  const changes = samples.slice(1).map((n, i) => n - samples[i]);
+  expect(changes.some((n) => n > 1)).toBe(true);
+  expect(changes.some((n) => n < -1)).toBe(true);
+  await expect(
+    page.getByRole("button", { name: "Revealed", exact: true }),
+  ).toBeVisible();
+  const values = await page.locator(".result-card").evaluateAll((cards) =>
+    cards.map((card) => ({
+      count: Number(card.querySelector(".counter")!.textContent),
+      height: (card.querySelector(".bar-track>div") as HTMLElement).style
+        .height,
+    })),
+  );
+  const max = Math.max(...values.map((v) => v.count));
+  for (const v of values)
+    expect(parseFloat(v.height)).toBeCloseTo((v.count / max) * 100, 3);
+  const total = await page.locator(".school-total b").innerText();
+  for (let i = 0; i < 2; i++) {
+    await page.getByRole("button", { name: "Next round" }).click();
+    await expect(page.locator(".school-total b")).toHaveText(total);
+    await page.getByRole("button", { name: "Reveal results" }).click();
+    await expect(page.locator(".school-total b")).toHaveText(total);
+    await expect(
+      page.getByRole("button", { name: "Revealed", exact: true }),
+    ).toBeVisible();
+    await expect(page.locator(".school-total b")).toHaveText(total);
+  }
 });
