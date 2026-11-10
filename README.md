@@ -78,3 +78,5 @@ Install the test browser with `npx playwright install chromium`. Browser tests u
 No deployment service, database, external authentication or SharePoint integration is required. The production build is the deliverable.
 
 The default animated Timewell now uses the supplied `Timewell_Spent_refined.svg` artwork. Its editable body, face, pointing glove, bells, legs and shoes are retained in `src/assets/timewell-rig.svg`, with blinking eyes, moving bells and a separate gesture arm for thumbs-up and waving. The original SVG is preserved alongside the adapted rig.
+
+In **Campaign settings → Background music**, choose an MP3, WAV or Ogg file (up to 20 MB), adjust its volume, and export the updated master and presentation. The music is embedded and loops offline across pages. Click **Unmute sound** to begin music and effects; the same button mutes both. Reveals have a rising and falling game-show tone followed by the result chime.

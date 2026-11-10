@@ -217,3 +217,9 @@ it("skips incomplete rows while retaining valid totals and blocks an entirely in
   expect(result.counts.years["7"]).toBe(1);
   expect(validate([row("")], mapping, []).errors.join()).toContain("no valid student records");
 });
+
+it("retains embedded music and a silent volume through export while rejecting non-audio URLs", () => {
+  const store = { ...emptyStore(), music: { data: "data:audio/wav;base64,UklGRg==", name: "Theme.wav", volume: 0 } };
+  expect(reopen(exportHTML(shell, store, true)).music).toEqual(store.music);
+  expect(cleanStore({ ...store, music: { ...store.music, data: "https://example.com/song.mp3" } }).music).toBeUndefined();
+});

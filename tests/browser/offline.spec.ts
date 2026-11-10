@@ -392,3 +392,39 @@ test("bars fluctuate then settle proportionally, while later rounds keep the sch
     await expect(page.locator(".school-total b")).toHaveText(total);
   }
 });
+
+test("uploaded music loops offline, continues through rounds, obeys mute and survives export", async ({ page }, testInfo) => {
+  await page.context().setOffline(true);
+  await page.addInitScript(() => {
+    const NativeAudio = window.Audio;
+    (window as any).__players = [];
+    window.Audio = new Proxy(NativeAudio, { construct(target, args) {
+      const audio = new target(...args);
+      (window as any).__players.push(audio);
+      return audio;
+    } });
+  });
+  await page.goto(url);
+  await studio(page);
+  await page.getByRole("button", { name: /Campaign settings/ }).click();
+  const wav = Buffer.alloc(44 + 16000);
+  wav.write("RIFF"); wav.writeUInt32LE(wav.length - 8, 4); wav.write("WAVEfmt ", 8);
+  wav.writeUInt32LE(16, 16); wav.writeUInt16LE(1, 20); wav.writeUInt16LE(1, 22);
+  wav.writeUInt32LE(8000, 24); wav.writeUInt32LE(16000, 28); wav.writeUInt16LE(2, 32); wav.writeUInt16LE(16, 34);
+  wav.write("data", 36); wav.writeUInt32LE(16000, 40);
+  await page.locator('input[accept^="audio/"]').setInputFiles({ name: "Theme.wav", mimeType: "audio/wav", buffer: wav });
+  await expect(page.getByText("Current music: Theme.wav")).toBeVisible();
+  await page.getByRole("button", { name: /Export HTML/ }).click();
+  const event = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export updated HTML", exact: true }).click();
+  const path = testInfo.outputPath("music-master.html");
+  await (await event).saveAs(path);
+  await page.goto("file://" + path);
+  await page.getByRole("button", { name: "Unmute sound", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => (window as any).__players.some((p: HTMLAudioElement) => p.loop && !p.paused && p.currentTime > 0))).toBe(true);
+  await page.getByRole("button", { name: "YEAR 9", exact: true }).click();
+  await page.getByRole("button", { name: "Reveal results", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => (window as any).__players.some((p: HTMLAudioElement) => p.loop && !p.paused))).toBe(true);
+  await page.getByRole("button", { name: "Mute sound", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => (window as any).__players.filter((p: HTMLAudioElement) => p.loop).every((p: HTMLAudioElement) => p.paused))).toBe(true);
+});

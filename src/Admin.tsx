@@ -754,6 +754,32 @@ export function Admin({
                 >
                   Save campaign settings
                 </button>
+                <h4>Background music</h4>
+                <p>Upload an MP3, WAV or Ogg file to loop throughout the app. Use the sound button to start or mute audio. Export the master and presentation to keep your music available offline.</p>
+                <label className="upload-zone">Choose background music
+                  <input type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/ogg" onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    if (!/\.(mp3|wav|ogg)$/i.test(file.name) || file.size > 20000000) { setMessage("Choose an MP3, WAV or Ogg file smaller than 20 MB."); return; }
+                    const reader = new FileReader();
+                    reader.onerror = () => setMessage("Music could not be read. Please try again.");
+                    reader.onload = () => {
+                      const mime = /\.mp3$/i.test(file.name) ? "audio/mpeg" : /\.wav$/i.test(file.name) ? "audio/wav" : "audio/ogg";
+                      const data = String(reader.result).replace(/^data:[^;]*;/, `data:${mime};`);
+                      const probe = new Audio(data);
+                      probe.onloadedmetadata = () => { update({ ...store, music: { data, name: file.name, volume: 0.25 } }); setMessage("Music added. Export to retain it, then use Unmute sound to play."); };
+                      probe.onerror = () => setMessage("This audio file cannot be played. Try another MP3, WAV or Ogg file.");
+                    };
+                    reader.readAsDataURL(file);
+                  }} />
+                </label>
+                {store.music && <>
+                  <p>Current music: {store.music.name}</p>
+                  <label>Music volume ({Math.round(store.music.volume * 100)}%)
+                    <input type="range" min="0" max="1" step="0.05" value={store.music.volume} onChange={(e) => update({ ...store, music: { ...store.music!, volume: Number(e.target.value) } })} />
+                  </label>
+                  <button className="secondary" onClick={() => update({ ...store, music: undefined })}>Remove music</button>
+                </>}
                 <h4>Timewell Spent artwork</h4>
                 <p>
                   The built-in Timewell has animated arms, gloves, eyes and

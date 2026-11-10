@@ -26,6 +26,7 @@ export type Store = {
   published: boolean;
   auth?: { salt: string; hash: string };
   mascot?: string;
+  music?: { data: string; name: string; volume: number };
 };
 export type Mapping = {
   name: string;
@@ -280,6 +281,9 @@ export function cleanStore(v: any): Store {
     published: !!v.published,
     ...(v.auth
       ? { auth: { salt: String(v.auth.salt), hash: String(v.auth.hash) } }
+      : {}),
+    ...(typeof v.music?.data === "string" && /^data:audio\/[a-zA-Z0-9.+-]+;base64,/.test(v.music.data)
+      ? { music: { data: v.music.data, name: String(v.music.name || "Background music"), volume: Math.max(0, Math.min(1, (Number.isFinite(Number(v.music.volume)) ? Number(v.music.volume) : 0.25))) } }
       : {}),
     ...(typeof v.mascot === "string" &&
     /^data:image\/(png|jpeg|webp);base64,/.test(v.mascot)

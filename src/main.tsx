@@ -88,6 +88,49 @@ function App() {
     [password, setPassword] = useState(""),
     [error, setError] = useState(""),
     [intro, setIntro] = useState(0);
+  const musicPlayer = useRef<HTMLAudioElement | null>(null);
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
+  useEffect(() => {
+    if (!store.music) return;
+    const player = new Audio(store.music.data);
+    player.loop = true;
+    musicPlayer.current = player;
+    if (!mutedRef.current) void player.play().catch(() => {});
+    return () => { player.pause(); player.removeAttribute("src"); musicPlayer.current = null; };
+  }, [store.music?.data]);
+  useEffect(() => {
+    const player = musicPlayer.current;
+    if (!player) return;
+    player.volume = store.music?.volume ?? 0.25;
+    if (muted) player.pause();
+    else void player.play().catch(() => {});
+  }, [muted, store.music]);
+  useEffect(() => {
+    if (muted || phase !== "running") return;
+    let ctx: AudioContext;
+    try { ctx = new AudioContext(); } catch { return; }
+    const oscillator = ctx.createOscillator(), gain = ctx.createGain();
+    oscillator.type = "triangle";
+    oscillator.connect(gain); gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.045, ctx.currentTime + 0.03);
+    const start = performance.now();
+    const updatePitch = () => {
+      const t = Math.min(1, (performance.now() - start) / 3300);
+      const height = 0.5 + Math.sin(t * (42 - 18 * t)) * 0.5;
+      oscillator.frequency.setTargetAtTime(180 + height * 900, ctx.currentTime, 0.018);
+    };
+    updatePitch(); oscillator.start();
+    const timer = window.setInterval(updatePitch, 20);
+    return () => {
+      clearInterval(timer);
+      gain.gain.cancelScheduledValues(ctx.currentTime);
+      gain.gain.setTargetAtTime(0, ctx.currentTime, 0.012);
+      oscillator.stop(ctx.currentTime + 0.06);
+      oscillator.onended = () => { void ctx.close(); };
+    };
+  }, [phase, muted]);
   const run = useRef(0);
   const positions = useRef(new Map<string, DOMRect>());
   useLayoutEffect(() => {
@@ -138,7 +181,7 @@ function App() {
     setIntro(Math.floor(Math.random() * 2));
   };
   function tone(final = false) {
-    if (muted) return;
+    if (mutedRef.current) return;
     try {
       const ctx = new AudioContext();
       const osc = ctx.createOscillator(),
@@ -185,7 +228,7 @@ function App() {
             ),
           );
         setPhase("done");
-        tone(true);
+        if (!mutedRef.current) tone(true);
       }
     }
     requestAnimationFrame(frame);
@@ -252,7 +295,10 @@ function App() {
             className="icon"
             title={muted ? "Unmute sound" : "Mute sound"}
             aria-label={muted ? "Unmute sound" : "Mute sound"}
-            onClick={() => setMuted(!muted)}
+            onClick={() => {
+              if (muted && musicPlayer.current) void musicPlayer.current.play().catch(() => {});
+              setMuted(!muted);
+            }}
           >
             {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
           </button>
