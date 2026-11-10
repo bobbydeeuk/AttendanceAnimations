@@ -82,7 +82,7 @@ function App() {
     [round, setRound] = useState(-1),
     [phase, setPhase] = useState<"hidden" | "running" | "done">("hidden"),
     [tick, setTick] = useState(0),
-    [muted, setMuted] = useState(true),
+    [muted, setMuted] = useState(!initial.music),
     [gate, setGate] = useState(false),
     [admin, setAdmin] = useState(false),
     [password, setPassword] = useState(""),
@@ -96,7 +96,7 @@ function App() {
     const player = new Audio(store.music.data);
     player.loop = true;
     musicPlayer.current = player;
-    if (!mutedRef.current) void player.play().catch(() => {});
+    if (!mutedRef.current) void player.play().catch(() => setMuted(true));
     return () => { player.pause(); player.removeAttribute("src"); musicPlayer.current = null; };
   }, [store.music?.data]);
   useEffect(() => {
@@ -104,7 +104,7 @@ function App() {
     if (!player) return;
     player.volume = store.music?.volume ?? 0.25;
     if (muted) player.pause();
-    else void player.play().catch(() => {});
+    else void player.play().catch(() => setMuted(true));
   }, [muted, store.music]);
   useEffect(() => {
     if (muted || phase !== "running") return;

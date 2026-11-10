@@ -420,7 +420,14 @@ test("uploaded music loops offline, continues through rounds, obeys mute and sur
   const path = testInfo.outputPath("music-master.html");
   await (await event).saveAs(path);
   await page.goto("file://" + path);
-  await page.getByRole("button", { name: "Unmute sound", exact: true }).click();
+  const sound = page.getByRole("button", { name: /^(Unmute sound|Mute sound)$/ });
+  await expect(sound).toBeVisible();
+  await expect.poll(() => page.evaluate(() =>
+    (window as any).__players.some((p: HTMLAudioElement) => p.loop && !p.paused) ||
+    !!document.querySelector('button[aria-label="Unmute sound"]')
+  )).toBe(true);
+  if (await page.getByRole("button", { name: "Unmute sound", exact: true }).isVisible())
+    await page.getByRole("button", { name: "Unmute sound", exact: true }).click();
   await expect.poll(() => page.evaluate(() => (window as any).__players.some((p: HTMLAudioElement) => p.loop && !p.paused && p.currentTime > 0))).toBe(true);
   await page.getByRole("button", { name: "YEAR 9", exact: true }).click();
   await page.getByRole("button", { name: "Reveal results", exact: true }).click();
