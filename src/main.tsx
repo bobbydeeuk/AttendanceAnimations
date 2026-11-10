@@ -330,9 +330,7 @@ function App() {
             <div className="speech">
               <span>TIMEWELL SPENT SAYS…</span>
               <strong>
-                Who’s still
-                <br />
-                going strong?
+                20 days of school in November—who’s still on track to attend them all?
               </strong>
               <span className="speech-star">✦</span>
             </div>
@@ -360,11 +358,7 @@ function App() {
                 <em>Showdown</em>
               </h1>
               <p>
-                {round === 0
-                  ? "Seven year groups. One shared goal."
-                  : round === 1
-                    ? "Different colours. The same determination."
-                    : "Every form has something to celebrate."}
+                20 days of school in November—can you attend them all?
               </p>
             </div>
             <div className="school-total">
@@ -380,7 +374,6 @@ function App() {
                           (counts?.total || 0) * tick,
                         ).toLocaleString()}
               </b>
-              <small>students · 100% attendance</small>
             </div>
           </div>
           <div className="host-strip">

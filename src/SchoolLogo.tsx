@@ -1,52 +1,15 @@
-/** Transparent vector tracing of the supplied school crest; white is retained inside the shield. */
+import schoolLogo from "./assets/school-logo.png";
+
+/** Official school artwork; clip away the surrounding social-card background. */
 export function SchoolLogo() {
   return (
-    <svg
-      className="school-logo"
-      viewBox="0 0 425 578"
-      role="img"
-      aria-label="Hedingham School crest"
-    >
+    <svg className="school-logo" viewBox="440 98 320 438" role="img" aria-label="Hedingham School crest">
       <defs>
-        <clipPath id="school-shield">
-          <path d="M212 24Q134 82 57 47L27 81Q72 154 47 253L29 328Q13 410 99 470L212 548 325 470Q411 410 395 328L376 253Q350 154 398 81L367 47Q290 82 212 24Z" />
+        <clipPath id="official-crest-outline">
+          <path d="M600 100 Q532 151 482 115 L442 157 Q488 207 459 291 Q420 400 482 450 Q525 484 583 516 L600 535 L608 510 Q687 467 722 432 Q769 388 746 296 Q717 206 758 157 L716 116 Q664 151 600 100Z" />
         </clipPath>
       </defs>
-      <path
-        d="M212 5Q133 67 56 26L8 77Q62 159 32 263L13 329Q-6 422 95 489L201 558 212 575 223 558 330 489Q431 422 412 329L393 263Q363 159 417 77L368 26Q291 67 212 5Z"
-        fill="white"
-        stroke="#0826b4"
-        strokeWidth="7"
-      />
-      <g clipPath="url(#school-shield)">
-        <path d="M0 0H425V578H0Z" fill="white" />
-        <path d="M0 0H212V268H0ZM212 268H425V578H212Z" fill="#0826b4" />
-        <path
-          d="m135 99 17 47h49l-39 29 14 47-41-29-41 29 15-47-40-29h49Z"
-          fill="white"
-        />
-        <path
-          d="M270 83Q296 88 312 81Q296 96 310 106Q315 116 326 112Q322 135 341 131L349 118Q360 139 373 131L365 154 354 169Q349 149 336 156Q327 164 341 178Q319 178 322 194Q325 206 339 207Q318 216 323 230Q326 243 339 250L281 251Q292 235 282 228Q275 224 270 226Q278 208 267 199Q281 191 275 179Q270 172 260 179Q266 161 255 155Q242 150 237 166L228 151 231 121Q250 136 258 122Q264 112 253 106Q278 105 270 83Z"
-          fill="#0826b4"
-        />
-        <g fill="white" stroke="#0826b4" strokeWidth="3">
-          <path d="M61 383 113 303Q124 285 136 303L197 383Q204 394 195 400Q191 405 181 395Q194 416 182 421Q173 425 165 407Q178 430 164 434Q152 436 145 410Q154 440 140 440Q129 441 126 413Q128 439 114 437Q100 435 105 409Q100 432 89 428Q76 424 85 404Q74 422 65 414Q56 408 68 392Q58 402 58 391Z" />
-          <path
-            d="m114 357-10 54m24-53 1 57m14-57 8 56m5-60 19 50m-58-52-29 50m80-50 31 43"
-            fill="none"
-          />
-        </g>
-        <path
-          d="M285 356C252 349 256 309 279 307C295 299 311 303 319 316Q331 337 310 358C345 346 368 368 356 391Q344 416 319 406L309 395Q313 426 294 436Q299 412 288 399C268 432 238 408 234 386Q226 356 263 356Z"
-          fill="white"
-        />
-      </g>
-      <path
-        d="M212 24Q134 82 57 47L27 81Q72 154 47 253L29 328Q13 410 99 470L212 548 325 470Q411 410 395 328L376 253Q350 154 398 81L367 47Q290 82 212 24Z"
-        fill="none"
-        stroke="#0826b4"
-        strokeWidth="5"
-      />
+      <image href={schoolLogo} width="1200" height="630" clipPath="url(#official-crest-outline)" />
     </svg>
   );
 }
