@@ -67,6 +67,7 @@ export function validate(
   history: Snapshot[],
 ) {
   const counts = blank(),
+    skipped: string[] = [],
     errors: string[] = [],
     warnings: string[] = [],
     seen = new Set<string>(),
@@ -94,8 +95,8 @@ export function validate(
       ),
       id = m.id ? String(r[m.id] ?? "").trim() : "";
     if (!name || !y || !form || !house || (m.id && !id)) {
-      errors.push(
-        `Row ${i + 2}: missing or invalid name, year, form, house or identifier.`,
+      skipped.push(
+        `Row ${i + 2}: skipped — missing or invalid name, year, form, house or identifier.`,
       );
       return;
     }
@@ -138,11 +139,12 @@ export function validate(
             `${group}: ${k.replace("|", " / ")} increased from ${prev[group][k] || 0} to ${v}.`,
           );
   }
-  if (!rows.length) errors.push("The worksheet contains no student records.");
+  if (!counts.total) errors.push("The worksheet contains no valid student records.");
   return {
     counts,
     errors,
     warnings,
+    skipped,
     valid: counts.total,
     rejected: rows.length - counts.total,
   };

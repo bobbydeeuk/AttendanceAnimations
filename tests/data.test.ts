@@ -208,3 +208,12 @@ it("preserves attendance coverage dates independently of upload timestamps throu
   expect(reopen(exportHTML(shell, store, false)).snapshots[0].asOf).toBe("2026-11-06");
   expect(store.snapshots[0].timestamp).toBe("2026-11-10T10:00:00Z");
 });
+
+it("skips incomplete rows while retaining valid totals and blocks an entirely invalid upload", () => {
+  const result = validate([row("Valid"), row(""), {...row("Missing house"), House: ""}], mapping, []);
+  expect(result.errors).toEqual([]);
+  expect(result.skipped).toHaveLength(2);
+  expect(result.counts.total).toBe(1);
+  expect(result.counts.years["7"]).toBe(1);
+  expect(validate([row("")], mapping, []).errors.join()).toContain("no valid student records");
+});

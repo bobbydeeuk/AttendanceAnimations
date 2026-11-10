@@ -359,8 +359,8 @@ export function Admin({
                             <b>{check.valid}</b>
                           </div>
                           <div>
-                            <small>REJECTED / QUESTIONABLE</small>
-                            <b>{check.rejected + check.warnings.length}</b>
+                            <small>EXCLUDED RECORDS</small>
+                            <b>{check.rejected}</b>
                           </div>
                           <div>
                             <small>PREVIOUS TOTAL</small>
@@ -380,6 +380,11 @@ export function Admin({
                             This workbook was already accepted. Duplicate
                             snapshot blocked.
                           </p>
+                        )}
+                        {check.skipped.length > 0 && (
+                          <details><summary>{check.skipped.length} incomplete or invalid rows skipped</summary>
+                            {check.skipped.map((message, i) => <p key={i}>{message}</p>)}
+                          </details>
                         )}
                         {check.errors.map((e, i) => (
                           <p className="error" key={i}>
