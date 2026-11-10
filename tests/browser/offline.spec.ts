@@ -65,7 +65,7 @@ test("offline three rounds, correct scope, keyboard controls and desktop layout"
   const year9 = await page
     .locator(".result-card.selected .counter")
     .innerText();
-  await page.locator("body").click({ position: { x: 5, y: 120 } });
+  await page.mouse.click(5, 120);
   await page.keyboard.press("ArrowRight");
   await expect(
     page.getByRole("heading", { name: "House Showdown" }),
@@ -434,4 +434,38 @@ test("uploaded music loops offline, continues through rounds, obeys mute and sur
   await expect.poll(() => page.evaluate(() => (window as any).__players.some((p: HTMLAudioElement) => p.loop && !p.paused))).toBe(true);
   await page.getByRole("button", { name: "Mute sound", exact: true }).click();
   await expect.poll(() => page.evaluate(() => (window as any).__players.filter((p: HTMLAudioElement) => p.loop).every((p: HTMLAudioElement) => p.paused))).toBe(true);
+});
+
+test("admin previews and selects reveal sounds and embeds a house badge", async ({ page }, testInfo) => {
+  await page.context().setOffline(true);
+  await page.goto(url);
+  await studio(page);
+  await page.getByRole("button", { name: /Campaign settings/ }).click();
+  await page.getByRole("button", { name: "Preview pitch sweep", exact: true }).click();
+  await page.getByRole("button", { name: "Preview rising steps", exact: true }).click();
+  await page.getByRole("button", { name: "Stop sound preview", exact: true }).click();
+  await page.getByLabel("Rising steps — intermittent game-show notes").check();
+  await page.locator('.house-badge-settings label').filter({ hasText: "Hawkwood" }).locator('input').setInputFiles({
+    name: "badge.png", mimeType: "image/png",
+    buffer: readFileSync(resolve("src/assets/houses/HHTrophyLogo.png"))
+  });
+  await expect(page.getByAltText("Hawkwood house badge")).toBeVisible();
+  await page.getByRole("button", { name: /Export HTML/ }).click();
+  const event = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export updated HTML", exact: true }).click();
+  const path = testInfo.outputPath("house-sounds.html"); await (await event).saveAs(path);
+  const dom = new Window(); dom.document.write(readFileSync(path, "utf8"));
+  const data = JSON.parse(dom.document.getElementById("attendance-data")!.textContent!);
+  expect(data.revealSound).toBe("steps"); expect(data.houseBadges.Hawkwood).toMatch(/^data:image\/png;base64,/);
+  await page.goto("file://" + path);
+  await page.getByRole("button", { name: "YEAR 9", exact: true }).click();
+  await page.getByRole("button", { name: "Next round", exact: true }).click();
+  await expect(page.locator('.houses .house-badge')).toHaveCount(4);
+  await page.screenshot({ path: 'docs/houses.png', fullPage: true });
+  for (const viewport of [{width:1366,height:768},{width:1280,height:720}]) {
+    await page.setViewportSize(viewport);
+    const controls = await page.locator('.present-controls').boundingBox();
+    expect(controls!.y + controls!.height).toBeLessThanOrEqual(viewport.height);
+  }
+  await expect(page.locator('.houses')).not.toContainText("MINOTAUR");
 });

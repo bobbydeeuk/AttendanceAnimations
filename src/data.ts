@@ -26,6 +26,8 @@ export type Store = {
   published: boolean;
   auth?: { salt: string; hash: string };
   mascot?: string;
+  revealSound?: "sweep" | "steps";
+  houseBadges?: Record<string, string>;
   music?: { data: string; name: string; volume: number };
 };
 export type Mapping = {
@@ -282,6 +284,8 @@ export function cleanStore(v: any): Store {
     ...(v.auth
       ? { auth: { salt: String(v.auth.salt), hash: String(v.auth.hash) } }
       : {}),
+    revealSound: v.revealSound === "steps" ? "steps" : "sweep",
+    houseBadges: Object.fromEntries(HOUSES.flatMap(h => typeof v.houseBadges?.[h] === "string" && /^data:image\/(png|jpeg|webp);base64,/.test(v.houseBadges[h]) ? [[h, v.houseBadges[h]]] : [])),
     ...(typeof v.music?.data === "string" && /^data:audio\/[a-zA-Z0-9.+-]+;base64,/.test(v.music.data)
       ? { music: { data: v.music.data, name: String(v.music.name || "Background music"), volume: Math.max(0, Math.min(1, (Number.isFinite(Number(v.music.volume)) ? Number(v.music.volume) : 0.25))) } }
       : {}),

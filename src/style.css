@@ -1854,3 +1854,12 @@ header .brand {
 .refined-eyes { transform-box: fill-box; transform-origin: center; animation: timewell-blink 7.5s linear infinite; }
 .refined-bell { transform-box: fill-box; transform-origin: center bottom; animation: timewell-bell-nod 8s ease-in-out infinite; }
 .timewell-celebrate .refined-left-arm { transform-box: fill-box; transform-origin: right top; animation: timewell-cheer 3.8s ease-in-out infinite; }
+
+.house-badge { display: block; width: 112px; height: 112px; object-fit: contain; border-radius: 50%; margin: 0 auto 12px; }
+.houses:has(.house-badge) .result-card { padding-top: 15px; }
+.houses:has(.house-badge) .bar-track { height: 110px; }
+.house-badge-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.sound-option { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 16px 0; }
+.sound-option label { display: flex; align-items: center; gap: 10px; }
+.sound-option input { width: auto; }
+@media (min-width: 1051px) and (max-height: 850px) { .house-badge { width: 75px; height: 75px; margin-bottom: 6px; } .houses:has(.house-badge) .bar-track { height: 65px; } }

@@ -223,3 +223,10 @@ it("retains embedded music and a silent volume through export while rejecting no
   expect(reopen(exportHTML(shell, store, true)).music).toEqual(store.music);
   expect(cleanStore({ ...store, music: { ...store.music, data: "https://example.com/song.mp3" } }).music).toBeUndefined();
 });
+
+it("preserves chosen reveal sounds and house badges in offline exports", () => {
+  const store = { ...emptyStore(), revealSound: "steps" as const, houseBadges: { Hawkwood: "data:image/png;base64,aGVsbG8=", Symonds: "https://example.com/badge.png" } };
+  const restored = reopen(exportHTML(shell, store, true));
+  expect(restored.revealSound).toBe("steps");
+  expect(restored.houseBadges).toEqual({ Hawkwood: store.houseBadges.Hawkwood });
+});

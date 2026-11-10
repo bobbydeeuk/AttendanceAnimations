@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Upload,
   Download,
@@ -8,6 +8,8 @@ import {
   Play,
   X,
 } from "lucide-react";
+import { houseBadges } from "./houseBadges";
+import { playRevealSound } from "./revealSound";
 import * as XLSX from "xlsx";
 import {
   YEARS,
@@ -43,6 +45,8 @@ export function Admin({
   close: () => void;
   source: string;
 }) {
+  const previewSound = useRef<(() => void) | null>(null);
+  useEffect(() => () => { previewSound.current?.(); }, []);
   const [tab, setTab] = useState("Import data"),
     [book, setBook] = useState<XLSX.WorkBook>(),
     [sheet, setSheet] = useState(""),
@@ -754,6 +758,29 @@ export function Admin({
                 >
                   Save campaign settings
                 </button>
+                <h4>House badges</h4>
+                <p>Add the badge for each house. Badges appear above its results and are embedded in exports.</p>
+                <div className="house-badge-settings">
+                  {HOUSES.map(house => <label key={house}>{house}
+                    <img className="house-badge" src={store.houseBadges?.[house] || houseBadges[house]} alt={`${house} house badge`} />
+                    <input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => {
+                      const file = e.target.files?.[0]; if (!file) return;
+                      if (!/^image\/(png|jpeg|webp)$/.test(file.type) || file.size > 5000000) { setMessage("Choose a PNG, JPEG or WebP smaller than 5 MB."); return; }
+                      const reader = new FileReader();
+                      reader.onload = () => { update({ ...store, houseBadges: { ...store.houseBadges, [house]: String(reader.result) } }); setMessage(`${house} badge saved. Export to retain it.`); };
+                      reader.readAsDataURL(file);
+                    }} />
+                  </label>)}
+                </div>
+                <h4>Bar reveal sound</h4>
+                <p>Preview either option, then select it for all Year, House and Form reveals. Previews play even while the show is muted.</p>
+                {(["sweep", "steps"] as const).map(option => <div className="sound-option" key={option}>
+                  <label><input type="radio" name="reveal-sound" checked={(store.revealSound || "sweep") === option} onChange={() => { previewSound.current?.(); update({ ...store, revealSound: option }); setMessage("Reveal sound selected. Export to retain it."); }} />
+                    {option === "sweep" ? "Pitch sweep — continuous up and down" : "Rising steps — intermittent game-show notes"}
+                  </label>
+                  <button className="secondary" onClick={() => { previewSound.current?.(); previewSound.current = playRevealSound(option); }}>Preview {option === "sweep" ? "pitch sweep" : "rising steps"}</button>
+                </div>)}
+                <button className="secondary" onClick={() => previewSound.current?.()}>Stop sound preview</button>
                 <h4>Background music</h4>
                 <p>Upload an MP3, WAV or Ogg file to loop throughout the app. Use the sound button to start or mute audio. Export the master and presentation to keep your music available offline.</p>
                 <label className="upload-zone">Choose background music

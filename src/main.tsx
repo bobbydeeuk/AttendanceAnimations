@@ -15,6 +15,8 @@ import {
   ShieldCheck,
   Trophy,
 } from "lucide-react";
+import { houseBadges } from "./houseBadges";
+import { playRevealSound } from "./revealSound";
 import { Admin } from "./Admin";
 const PRESENTATION = import.meta.env.MODE === "presentation";
 import "@fontsource/plus-jakarta-sans/400.css";
@@ -108,29 +110,8 @@ function App() {
   }, [muted, store.music]);
   useEffect(() => {
     if (muted || phase !== "running") return;
-    let ctx: AudioContext;
-    try { ctx = new AudioContext(); } catch { return; }
-    const oscillator = ctx.createOscillator(), gain = ctx.createGain();
-    oscillator.type = "triangle";
-    oscillator.connect(gain); gain.connect(ctx.destination);
-    gain.gain.setValueAtTime(0, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.045, ctx.currentTime + 0.03);
-    const start = performance.now();
-    const updatePitch = () => {
-      const t = Math.min(1, (performance.now() - start) / 3300);
-      const height = 0.5 + Math.sin(t * (42 - 18 * t)) * 0.5;
-      oscillator.frequency.setTargetAtTime(180 + height * 900, ctx.currentTime, 0.018);
-    };
-    updatePitch(); oscillator.start();
-    const timer = window.setInterval(updatePitch, 20);
-    return () => {
-      clearInterval(timer);
-      gain.gain.cancelScheduledValues(ctx.currentTime);
-      gain.gain.setTargetAtTime(0, ctx.currentTime, 0.012);
-      oscillator.stop(ctx.currentTime + 0.06);
-      oscillator.onended = () => { void ctx.close(); };
-    };
-  }, [phase, muted]);
+    return playRevealSound(store.revealSound);
+  }, [phase, muted, store.revealSound]);
   const run = useRef(0);
   const positions = useRef(new Map<string, DOMRect>());
   useLayoutEffect(() => {
@@ -505,6 +486,7 @@ function App() {
                     } as React.CSSProperties
                   }
                 >
+                  {round === 1 && <img className="house-badge" src={store.houseBadges?.[key] || houseBadges[key]} alt={`${key} house badge`} />}
                   <div className="result-top">
                     <span>
                       {phase === "done" ? (
@@ -518,15 +500,7 @@ function App() {
                       )}
                     </span>
                     <h2>{label}</h2>
-                    {round === 1 && (
-                      <small>
-                        {
-                          ["HAWK", "SHARK", "MINOTAUR", "TIGER"][
-                            HOUSES.indexOf(key)
-                          ]
-                        }
-                      </small>
-                    )}
+
                   </div>
                   <div
                     className="counter"
