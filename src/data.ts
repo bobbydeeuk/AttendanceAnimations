@@ -9,6 +9,7 @@ export type Counts = {
 export type Snapshot = {
   id: string;
   timestamp: string;
+  asOf?: string;
   campaign: string;
   schemaVersion: 1;
   fingerprint: string;
@@ -157,6 +158,7 @@ export function accept(
   counts: Counts,
   fp: string,
   timestamp = new Date().toISOString(),
+  asOf?: string,
 ): Store {
   if (store.snapshots.some((s) => s.fingerprint === fp))
     throw Error("This workbook has already been accepted.");
@@ -164,6 +166,7 @@ export function accept(
   const snapshot: Snapshot = {
     id: crypto.randomUUID(),
     timestamp,
+    ...(asOf ? { asOf } : {}),
     campaign: store.campaign.id,
     schemaVersion: 1,
     fingerprint: fp,
@@ -245,6 +248,7 @@ export function cleanStore(v: any): Store {
   const snapshots: Snapshot[] = v.snapshots.map((s: any) => ({
     id: String(s.id),
     timestamp: new Date(s.timestamp).toISOString(),
+    ...(s.asOf ? { asOf: String(s.asOf) } : {}),
     campaign: String(v.campaign.id),
     schemaVersion: 1,
     fingerprint: String(s.fingerprint),

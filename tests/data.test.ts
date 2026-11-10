@@ -201,3 +201,10 @@ it("updates only the real data element when bundled code contains lookalike scri
   expect(parsed.scripts[0].textContent).toContain("window.keep = true");
   expect(reopen(html).snapshots).toHaveLength(3);
 });
+
+it("preserves attendance coverage dates independently of upload timestamps through backup and export", () => {
+  const store = accept(emptyStore(), blank(), "dated", "2026-11-10T10:00:00Z", "2026-11-06");
+  expect(cleanStore(JSON.parse(JSON.stringify(store))).snapshots[0].asOf).toBe("2026-11-06");
+  expect(reopen(exportHTML(shell, store, false)).snapshots[0].asOf).toBe("2026-11-06");
+  expect(store.snapshots[0].timestamp).toBe("2026-11-10T10:00:00Z");
+});

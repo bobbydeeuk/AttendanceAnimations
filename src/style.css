@@ -1848,3 +1848,5 @@ header .brand {
 }
 
 .host-caption { font-size: 14px; font-weight: 700; letter-spacing: .3px; color: #fff3d1; }
+
+.results-date { font-size: 19px; font-weight: 700; color: #fff3d1; margin: 16px 0; }

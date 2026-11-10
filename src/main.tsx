@@ -406,6 +406,15 @@ function App() {
             </p>
             <span>TIMEWELL SPENT</span>
           </div>
+          <p className="results-date" aria-live="polite">
+            {phase === "hidden" ? "Previous results (as of): " : "New results (as of): "}
+            {(() => {
+              const snapshot = phase === "hidden" ? store.snapshots.at(-2) : latest;
+              return snapshot?.asOf
+                ? new Date(snapshot.asOf + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+                : snapshot ? "Date not recorded" : "No previous collection";
+            })()}
+          </p>
           <div
             className={"leaderboard " + (round === 1 ? "houses" : "")}
             aria-busy={phase === "running"}

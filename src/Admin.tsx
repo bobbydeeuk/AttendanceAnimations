@@ -54,6 +54,7 @@ export function Admin({
       form: "",
       house: "",
     }),
+    [asOf, setAsOf] = useState(new Date().toLocaleDateString("en-CA")),
     [fp, setFp] = useState(""),
     [message, setMessage] = useState(""),
     [reviewed, setReviewed] = useState(false),
@@ -123,7 +124,10 @@ export function Admin({
     }
   }
   function commit() {
-    if (!canCommit) return;
+    if (!canCommit || !/^\d{4}-\d{2}-\d{2}$/.test(asOf)) {
+      setMessage("Choose the date attendance is up to before accepting this upload.");
+      return;
+    }
     let base = store.demo
       ? { ...store, snapshots: [], demo: false, audit: [] }
       : store;
@@ -143,7 +147,7 @@ export function Admin({
       };
     }
     try {
-      update(accept(base, check.counts, fp));
+      update(accept(base, check.counts, fp, new Date().toISOString(), asOf));
       setRows([]);
       setBook(undefined);
       setPreview(false);
@@ -280,6 +284,11 @@ export function Admin({
                         ))}
                       </select>
                     </label>
+                    <label>
+                      Attendance up to
+                      <input type="date" required value={asOf} onChange={(e) => { setAsOf(e.target.value); setPreview(false); }} />
+                    </label>
+                    <p>The last school day covered by this attendance file.</p>
                     <h4>Check column mapping</h4>
                     <div className="mapping">
                       {(["name", "year", "form", "house", "id"] as const).map(
