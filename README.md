@@ -76,3 +76,5 @@ Install the test browser with `npx playwright install chromium`. Browser tests u
 `src/data.ts` provides the validation, normalization, counting, ranking, immutable snapshot and robust serialization functions. `src/Admin.tsx` provides the publisher workflow and interactive SVG trend charts. `src/main.tsx` provides the presentation state machine. `demoStore()` is the development/demo aggregate generator; all tests use fictional pupil names. `docs/brief.txt` preserves the supplied brief.
 
 No deployment service, database, external authentication or SharePoint integration is required. The production build is the deliverable.
+
+The default animated Timewell now uses the supplied `Timewell_Spent_refined.svg` artwork. Its editable body, face, pointing glove, bells, legs and shoes are retained in `src/assets/timewell-rig.svg`, with blinking eyes, moving bells and a separate gesture arm for thumbs-up and waving. The original SVG is preserved alongside the adapted rig.

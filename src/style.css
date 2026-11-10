@@ -1850,3 +1850,7 @@ header .brand {
 .host-caption { font-size: 14px; font-weight: 700; letter-spacing: .3px; color: #fff3d1; }
 
 .results-date { font-size: 19px; font-weight: 700; color: #fff3d1; margin: 16px 0; }
+
+.refined-eyes { transform-box: fill-box; transform-origin: center; animation: timewell-blink 7.5s linear infinite; }
+.refined-bell { transform-box: fill-box; transform-origin: center bottom; animation: timewell-bell-nod 8s ease-in-out infinite; }
+.timewell-celebrate .refined-left-arm { transform-box: fill-box; transform-origin: right top; animation: timewell-cheer 3.8s ease-in-out infinite; }
