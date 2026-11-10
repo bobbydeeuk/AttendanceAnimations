@@ -1846,3 +1846,5 @@ header .brand {
   .speech { width: 330px; }
   .speech strong { font-size: 21px; }
 }
+
+.host-caption { font-size: 14px; font-weight: 700; letter-spacing: .3px; color: #fff3d1; }

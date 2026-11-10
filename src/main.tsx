@@ -330,14 +330,14 @@ function App() {
             <div className="speech">
               <span>TIMEWELL SPENT SAYS…</span>
               <strong>
-                20 days of school in November—who’s still on track to attend them all?
+                {store.campaign.name}—who’s still on track to attend every school day?
               </strong>
               <span className="speech-star">✦</span>
             </div>
             <Timewell asset={store.mascot} gesture="thumbs-up" />
             <div className="host-shadow" />
             <div className="host-caption">
-              <span className="live-dot" /> YOUR HOST, TIMEWELL SPENT
+              Your Host, Timewell Spent
             </div>
           </div>
         </main>
@@ -358,7 +358,7 @@ function App() {
                 <em>Showdown</em>
               </h1>
               <p>
-                20 days of school in November—can you attend them all?
+                {store.campaign.name}—can you attend every school day?
               </p>
             </div>
             <div className="school-total">
@@ -419,13 +419,15 @@ function App() {
               const settle =
                 tick >=
                 0.58 + (i / Math.max(1, displayRanking.length - 1)) * 0.3;
+              const startingValue = prev ?? 0;
               const val =
+                phase === "hidden" ? startingValue :
                 phase === "done" || (phase === "running" && settle)
                   ? r.value
                   : Math.round(
-                      (0.5 +
-                        Math.sin(tick * (42 - 18 * tick) + i * 2.1) * 0.5) *
-                        max,
+                      startingValue * (1 - Math.min(1, tick * 8)) +
+                      (0.5 + Math.sin(tick * (42 - 18 * tick) + i * 2.1) * 0.5) *
+                        max * Math.min(1, tick * 8),
                     );
               const color =
                 round === 1
@@ -476,25 +478,17 @@ function App() {
                     aria-label={
                       phase === "done"
                         ? `${label}: ${r.value}`
-                        : `${label}: hidden`
+                        : `${label}: ${val}`
                     }
                   >
-                    {phase === "hidden" ? (
-                      <span className="waiting">?</span>
-                    ) : (
-                      val
-                    )}
+                    {val}
                   </div>
                   <span className="still">STILL GOING STRONG</span>
                   <div className="bar-track">
                     <div
                       style={{
                         height:
-                          phase === "done"
-                            ? `${(r.value / max) * 100}%`
-                            : phase === "running"
-                              ? `${(val / max) * 100}%`
-                              : "0%",
+                          `${(val / max) * 100}%`,
                       }}
                     />
                   </div>
