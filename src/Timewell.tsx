@@ -127,17 +127,13 @@ export function Timewell({
                 strokeWidth="4"
               />
               <g className="timewell-thumb-hand">
-                <path
-                  d="M377 237Q360 232 364 216Q361 204 376 195Q386 185 388 178Q390 169 386 160Q383 146 395 143Q408 140 412 155Q416 169 409 181Q421 177 432 184Q444 187 440 200Q444 211 436 218Q438 231 426 236Q423 247 408 245Q389 248 377 237Z"
-                  fill={paint("glove")}
-                  strokeWidth="4.5"
-                />
-                <path
-                  d="M410 196q14-5 25 4m-27 8q13-4 27 4m-28 8q13-3 24 3m-49-22q13 1 15 15q2 10-3 19"
-                  fill="none"
-                  strokeWidth="3.3"
-                />
-                <path d="m396 158 1 15" stroke="#fff" strokeWidth="5" />
+                <path d="M376 241 C366 232 364 218 370 207 L382 190 C387 182 389 171 387 159 C385 146 390 140 398 141 C409 142 413 153 412 166 L409 185 C417 181 428 184 431 191 C440 193 443 201 439 208 C445 215 441 224 435 227 C437 237 428 244 417 245 L393 248Z" fill={paint("glove")} strokeWidth="4" />
+                <path d="M409 187 C400 185 395 190 397 196 C399 203 414 203 431 202 C440 201 439 191 431 189" fill={paint("glove")} strokeWidth="3" />
+                <path d="M405 202 C395 201 393 207 396 212 C400 217 418 217 433 214 C441 212 442 204 436 201" fill={paint("glove")} strokeWidth="3" />
+                <path d="M404 216 C395 216 394 222 399 227 C405 231 419 230 431 227 C437 225 439 219 436 215" fill={paint("glove")} strokeWidth="3" />
+                <path d="M403 230 C397 231 400 239 408 240 C419 242 429 237 430 230" fill={paint("glove")} strokeWidth="3" />
+                <path d="M379 207 C388 201 397 206 398 215 C400 224 395 231 389 234" fill="none" strokeWidth="3" />
+                <path d="M394 151 Q400 148 402 161" fill="none" stroke="#fff" strokeWidth="5" />
               </g>
             </g>
           ) : (

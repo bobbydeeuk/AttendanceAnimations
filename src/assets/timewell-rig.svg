@@ -37,11 +37,7 @@
 
 
 
-<g class="refined-left-arm"><g id="left-arm" stroke="#03152d" stroke-linejoin="round" stroke-linecap="round">
-  <path d="M364 718 C329 735 307 776 287 799 C267 826 239 823 207 811 L199 860 C248 875 288 863 320 828 L389 772 Z" fill="url(#armBlue)" stroke-width="15" />
-  <path d="M329 760 C312 792 290 813 270 823" fill="none" stroke="#3682b4" stroke-width="12" opacity=".55" />
-</g>
-<g id="left-glove" stroke="#04142b" stroke-linecap="round" stroke-linejoin="round" transform="translate(-12,-10) scale(0.95)">
+<g class="refined-left-arm"><g id="left-arm"><path d="M350 760 C325 842 262 866 217 798" fill="none" stroke="#03152d" stroke-width="64" stroke-linecap="round" /><path d="M350 760 C325 842 262 866 217 798" fill="none" stroke="url(#armBlue)" stroke-width="40" stroke-linecap="round" /><path d="M322 807 Q273 844 240 811" fill="none" stroke="#3682b4" stroke-width="9" stroke-linecap="round" /></g><g id="left-glove" stroke="#04142b" stroke-linecap="round" stroke-linejoin="round" transform="translate(-12,-10) scale(0.95)">
 
   <path d="M237 760 C259 766 268 782 275 800 C279 826 269 850 251 863 C226 879 207 879 183 866 C158 862 133 850 112 840 L82 828 C59 817 54 790 72 766 C57 742 65 721 78 706 C58 695 35 680 29 667 C20 654 23 639 34 629 C48 615 64 625 79 636 C104 652 128 661 162 678 C182 687 190 691 205 698 C218 690 234 690 247 698 C270 712 270 741 257 763 Z" fill="url(#gloveWhite)" stroke-width="13" />
 
@@ -113,7 +109,7 @@
     <g id="numeral-3" transform="translate(853.828 590) scale(0.043750000 -0.054687500)">
       <path transform="translate(0.0000 0)" d="M954 805Q1105 766 1183.5 669.5Q1262 573 1262 424Q1262 202 1092.0 86.5Q922 -29 596 -29Q481 -29 365.5 -10.5Q250 8 137 45V342Q245 288 351.5 260.5Q458 233 561 233Q714 233 795.5 286.0Q877 339 877 438Q877 540 793.5 592.5Q710 645 547 645H393V893H555Q700 893 771.0 938.5Q842 984 842 1077Q842 1163 773.0 1210.0Q704 1257 578 1257Q485 1257 390.0 1236.0Q295 1215 201 1174V1456Q315 1488 427.0 1504.0Q539 1520 647 1520Q938 1520 1082.5 1424.5Q1227 1329 1227 1137Q1227 1006 1158.0 922.5Q1089 839 954 805Z" />
     </g>
-    <g id="numeral-6" transform="translate(622.611 836) scale(0.039843750 -0.049804688)">
+    <g id="numeral-6" transform="translate(622.611 884) scale(0.039843750 -0.049804688)">
       <path transform="translate(0.0000 0)" d="M741 737Q640 737 589.5 671.5Q539 606 539 475Q539 344 589.5 278.5Q640 213 741 213Q843 213 893.5 278.5Q944 344 944 475Q944 606 893.5 671.5Q843 737 741 737ZM1217 1454V1178Q1122 1223 1038.0 1244.5Q954 1266 874 1266Q702 1266 606.0 1170.5Q510 1075 494 887Q560 936 637.0 960.5Q714 985 805 985Q1034 985 1174.5 851.0Q1315 717 1315 500Q1315 260 1158.0 115.5Q1001 -29 737 -29Q446 -29 286.5 167.5Q127 364 127 725Q127 1095 313.5 1306.5Q500 1518 825 1518Q928 1518 1025.0 1502.0Q1122 1486 1217 1454Z" />
     </g>
   </g>
